@@ -1,5 +1,6 @@
 
 import 'package:flutter/material.dart';
+import 'package:notificationapp/local_notification_service.dart';
 import 'package:notificationapp/notification_service.dart';
 
 class Home extends StatefulWidget {
@@ -10,6 +11,7 @@ class Home extends StatefulWidget {
 }
 
 class _HomeState extends State<Home> {
+  var service=LocalNotficationService();
 
   @override
   void initState() {
@@ -24,12 +26,16 @@ class _HomeState extends State<Home> {
         elevation: 3,
       ),
 
-      body: Column(
-        mainAxisAlignment: MainAxisAlignment.center,
-        crossAxisAlignment: CrossAxisAlignment.center,
-        children: [
-          FilledButton(onPressed: NotificationService.createNotification, child: Text('simple noti'))
-        ],
+      body: Center(
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.center,
+          crossAxisAlignment: CrossAxisAlignment.center,
+          children: [
+            FilledButton(onPressed: NotificationService.createNotification, child: Text('awesome noti')),
+            SizedBox(height: 30,),
+            FilledButton(onPressed: () async=>await service.showLocalNotification(), child: Text('local noti'))
+          ],
+        ),
       ),
 
       floatingActionButton: FloatingActionButton(

@@ -1,11 +1,7 @@
-import 'dart:isolate';
-
 import 'package:awesome_notifications/awesome_notifications.dart';
 import 'package:flutter/material.dart';
 
 class NotificationService{
-  static ReceivedAction? initialAction;
-   static ReceivePort? receivePort;
   ///this shows a in app notification
   ///
   ///The [param] `context` is passed to show the dialog
@@ -41,7 +37,8 @@ class NotificationService{
     ));
   }
 
-  static Future initializeLocalNotifications()async{
+  ///awesome nofification 
+  static Future initializeAwesomeNotifications()async{
     await AwesomeNotifications().initialize(
       null, //'resource://drawable/res_app_icon',//
         [
@@ -60,21 +57,19 @@ class NotificationService{
         ],
         channelGroups: [
           NotificationChannelGroup(
-              channelGroupKey: 'basic_channel_group',
+              channelGroupKey: 'basic_channel',
               channelGroupName: 'Basic group')
         ],
         debug: true
       );
-
-    // Get initial notification action is optional
-    initialAction = await AwesomeNotifications().getInitialNotificationAction(removeFromActionEvents: false);
-
+    
     await AwesomeNotifications().isNotificationAllowed().then((value) async{
       if(!value){
         await AwesomeNotifications().requestPermissionToSendNotifications();
       }
     });
 
+    //these are not necessary 
     await AwesomeNotifications().setListeners(
       onActionReceivedMethod: _onActionReceivedMethod,
       onNotificationCreatedMethod: _onNotificationCreatedMethod,
@@ -85,6 +80,7 @@ class NotificationService{
   }
 
   static Future _onActionReceivedMethod(ReceivedAction action)async{
+    //
     debugPrint(action.body);
   }
 
@@ -104,12 +100,15 @@ class NotificationService{
     AwesomeNotifications().createNotification(
       content: NotificationContent(
           id: 10,
-          channelKey: 'basic_channel',
+          bigPicture: 'https://t4.ftcdn.net/jpg/03/62/03/11/360_F_362031177_BBsdlV5luoG2s2e2GL17K41mZNYt9CiB.jpg',
+          channelKey: 'alerts',
           actionType: ActionType.Default,
           title: 'Hello World!',
           body: 'This is my first notification!',
       )
     );
   }
+
+  
 
 }

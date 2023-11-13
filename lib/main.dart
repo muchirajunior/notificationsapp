@@ -1,12 +1,14 @@
 import 'package:flutter/material.dart';
 import 'package:notificationapp/home.dart';
+import 'package:notificationapp/local_notification_service.dart';
 import 'package:notificationapp/notification_service.dart';
 
 void main() async{
    WidgetsFlutterBinding.ensureInitialized();
 
   // Always initialize Awesome Notifications
-  await NotificationService.initializeLocalNotifications();
+  await NotificationService.initializeAwesomeNotifications();
+  await LocalNotficationService.initializeLocalNotifications();
   runApp(const MyApp());
 }
 
