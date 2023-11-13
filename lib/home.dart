@@ -24,6 +24,14 @@ class _HomeState extends State<Home> {
         elevation: 3,
       ),
 
+      body: Column(
+        mainAxisAlignment: MainAxisAlignment.center,
+        crossAxisAlignment: CrossAxisAlignment.center,
+        children: [
+          FilledButton(onPressed: NotificationService.createNotification, child: Text('simple noti'))
+        ],
+      ),
+
       floatingActionButton: FloatingActionButton(
         onPressed: ()=>NotificationService.showAlertNotification(context),
         child: const Icon(Icons.add),

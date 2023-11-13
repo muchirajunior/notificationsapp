@@ -1,11 +1,17 @@
 import 'package:flutter/material.dart';
 import 'package:notificationapp/home.dart';
+import 'package:notificationapp/notification_service.dart';
 
-void main() {
+void main() async{
+   WidgetsFlutterBinding.ensureInitialized();
+
+  // Always initialize Awesome Notifications
+  await NotificationService.initializeLocalNotifications();
   runApp(const MyApp());
 }
 
 class MyApp extends StatefulWidget {
+  static final GlobalKey<NavigatorState> navigatorKey = GlobalKey<NavigatorState>();
   const MyApp({super.key});
 
   @override
@@ -19,6 +25,7 @@ class _MyAppState extends State<MyApp> {
   Widget build(BuildContext context) {
     return MaterialApp(
       title: 'Flutter Demo',
+      navigatorKey: MyApp.navigatorKey,
       theme: ThemeData(
         colorScheme: ColorScheme.fromSeed(seedColor: Colors.purple.shade900),
         useMaterial3: true,

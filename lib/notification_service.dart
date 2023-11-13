@@ -1,6 +1,11 @@
+import 'dart:isolate';
+
+import 'package:awesome_notifications/awesome_notifications.dart';
 import 'package:flutter/material.dart';
 
 class NotificationService{
+  static ReceivedAction? initialAction;
+   static ReceivePort? receivePort;
   ///this shows a in app notification
   ///
   ///The [param] `context` is passed to show the dialog
@@ -35,4 +40,76 @@ class NotificationService{
       ],
     ));
   }
+
+  static Future initializeLocalNotifications()async{
+    await AwesomeNotifications().initialize(
+      null, //'resource://drawable/res_app_icon',//
+        [
+          NotificationChannel(
+            channelKey: 'alerts',
+            channelName: 'Alerts',
+            channelDescription: 'Notification tests as alerts',
+            playSound: true,
+            onlyAlertOnce: true,
+            groupAlertBehavior: GroupAlertBehavior.Children,
+            importance: NotificationImportance.High,
+            defaultPrivacy: NotificationPrivacy.Private,
+            defaultColor: Colors.deepPurple,
+            ledColor: Colors.deepPurple
+          )
+        ],
+        channelGroups: [
+          NotificationChannelGroup(
+              channelGroupKey: 'basic_channel_group',
+              channelGroupName: 'Basic group')
+        ],
+        debug: true
+      );
+
+    // Get initial notification action is optional
+    initialAction = await AwesomeNotifications().getInitialNotificationAction(removeFromActionEvents: false);
+
+    await AwesomeNotifications().isNotificationAllowed().then((value) async{
+      if(!value){
+        await AwesomeNotifications().requestPermissionToSendNotifications();
+      }
+    });
+
+    await AwesomeNotifications().setListeners(
+      onActionReceivedMethod: _onActionReceivedMethod,
+      onNotificationCreatedMethod: _onNotificationCreatedMethod,
+      onDismissActionReceivedMethod: _onDismissActionReceivedMethod,
+      onNotificationDisplayedMethod: _onNotificationDisplayedMethod
+    );
+
+  }
+
+  static Future _onActionReceivedMethod(ReceivedAction action)async{
+    debugPrint(action.body);
+  }
+
+  static Future _onNotificationCreatedMethod(ReceivedNotification notification)async{
+    debugPrint(notification.body);
+  }
+
+  static Future _onDismissActionReceivedMethod(ReceivedAction action)async{
+    debugPrint(action.body);
+  }
+
+  static Future _onNotificationDisplayedMethod(ReceivedNotification notification)async{
+    debugPrint(notification.body);
+  }
+
+  static Future createNotification()async{
+    AwesomeNotifications().createNotification(
+      content: NotificationContent(
+          id: 10,
+          channelKey: 'basic_channel',
+          actionType: ActionType.Default,
+          title: 'Hello World!',
+          body: 'This is my first notification!',
+      )
+    );
+  }
+
 }
