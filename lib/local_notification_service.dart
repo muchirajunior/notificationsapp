@@ -14,9 +14,9 @@ class LocalNotficationService{
           macOS:DarwinInitializationSettings(),
           linux: LinuxInitializationSettings(defaultActionName: 'notification') 
         );
+    
     await FlutterLocalNotificationsPlugin().initialize(
         settings,
-        onDidReceiveBackgroundNotificationResponse: _onDidReceiveBackgroundNotificationResponse,
         onDidReceiveNotificationResponse: _onDidReceiveNotificationResponse
       
       );
@@ -31,7 +31,11 @@ class LocalNotficationService{
     );
   }
 
-   Future showLocalNotification()async{
+  ///This methods shows a static noitification
+  ///
+  ///add some parameter like id,title,body and payload to customize. 
+  ///The [payload] will be a string but we use jsonencode to convert it from Map
+  static Future showLocalNotification()async{
     var payload=jsonEncode({
       'message':'This is a sample message',
       'body':'as long as this text is readable to the user it okey and good'
@@ -39,12 +43,19 @@ class LocalNotficationService{
     await FlutterLocalNotificationsPlugin().show(-1, 'local noti', 'Flutter local notifications', _notificationDetails(), payload: payload);
   }
 
-  static void _onDidReceiveBackgroundNotificationResponse(NotificationResponse details) {
-    print('recieced a backgroud task');
+  ///This creates a repeated notification after every min
+  ///
+  ///add paramameters to change it to notification of your like
+  static Future scheduleLocalNotification()async{
+    var payload=jsonEncode({
+      'message':'This is a sample message',
+      'body':'as long as this text is readable to the user it okey and good'
+    });
+    await FlutterLocalNotificationsPlugin().periodicallyShow(-1, 'local noti', 'Flutter local notifications',RepeatInterval.everyMinute,_notificationDetails(),payload: payload);
   }
 
   static void _onDidReceiveNotificationResponse(NotificationResponse details) {
-    print(details.payload);
+    debugPrint(details.payload);
     MyApp.navigatorKey.currentState!.push(MaterialPageRoute(builder: (context)=>NotificationScreen(payload: jsonDecode(details.payload!))));
 
   }

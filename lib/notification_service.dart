@@ -1,11 +1,14 @@
 import 'package:awesome_notifications/awesome_notifications.dart';
 import 'package:flutter/material.dart';
+import 'package:notificationapp/main.dart';
+import 'package:notificationapp/notification_screen.dart';
 
 class NotificationService{
   ///this shows a in app notification
   ///
   ///The [param] `context` is passed to show the dialog
-  static  showAlertNotification(BuildContext context){
+  static  showInAppNotification(){
+    var context= MyApp.navigatorKey.currentContext!;
     showDialog(context: context, barrierDismissible: false, builder: (context)=>AlertDialog(
       shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10)),
       clipBehavior: Clip.hardEdge,
@@ -80,7 +83,7 @@ class NotificationService{
   }
 
   static Future _onActionReceivedMethod(ReceivedAction action)async{
-    //
+    MyApp.navigatorKey.currentState!.push(MaterialPageRoute(builder: (context)=>NotificationScreen(payload:action.payload! )));
     debugPrint(action.body);
   }
 
@@ -105,6 +108,7 @@ class NotificationService{
           actionType: ActionType.Default,
           title: 'Hello World!',
           body: 'This is my first notification!',
+          payload: { 'message':'this an awesome notofication' }
       )
     );
   }

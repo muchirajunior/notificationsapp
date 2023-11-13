@@ -16,5 +16,6 @@ class NotificationScreen extends StatelessWidget {
         child: Text(payload['message']),
       ),
     );
+
   }
 }
